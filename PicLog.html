@@ -14,21 +14,21 @@
                         height: 25px;
                 }
         </style>
-        <script type='text/javascript' src="PicLog.js">
+        <script async type='text/javascript' src="PicLog.js">
         </script>
 </head>
 
-<body onload="init()">
+<body>
         <p>イラストロジック</p>
         <table id="board"></table>
-        <button id="kesuButton" onclick="clearNum()">消す</button>
-        <button id="usagi" onclick="setNum(this)">うさぎ</button>
-        <button id="fish" onclick="setNum(this)">さかな</button>
+        <button id="kesuButton">消す</button>
+        <button id="usagi" class="getCSV">うさぎ</button>
+        <button id="fish" class="getCSV">さかな</button>
         <br>
         <hr>
         <p>問題を変えるときは、一度「消す」ボタンをクリックしてから新しい問題を設定してください。</p>
         <hr>
-        <button id="resultButton" onclick="match()">結果</button>
+        <button id="resultButton">結果</button>
         <p>結果：<span id="resulttext"></span></p>
 </body>
 

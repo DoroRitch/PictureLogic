@@ -1,5 +1,9 @@
 // --------------------盤面作り-----------------------------------------------------------
 var color = "black";
+var quiz = "default.csv";
+var result = [];
+
+window.onload = init();
 function init() {
         var b = document.getElementById("board");
         for (var i = 0; i < 21; i++) {
@@ -47,6 +51,18 @@ function init() {
 
         // 表の全てのtdを配列化
         TARGETCELLS = document.getElementsByTagName("td");
+
+        var cleanBtn = document.getElementById("kesuButton");
+        cleanBtn.onclick = clearNum;
+
+        var btns = document.getElementsByClassName("getCSV");
+
+        for (var i = 0; i < btns.length; i++) {
+                btns[i].addEventListener("click", setNum);
+        }
+
+        var resultBtn = document.getElementById("resultButton");
+        resultBtn.onclick = match;
 }
 
 function clicked(evt) {
@@ -102,13 +118,11 @@ function backWhite(evt) {
 }
 // --------------------盤面作り-ここまで----------------------------------------------------------
 // --------------------ファイル読込・盤面記入-----------------------------------------------------
-var quiz = "default.csv";
-var result = [];
 
 function getCSV() {
         var req = new XMLHttpRequest();
         req.open("get", quiz, true);
-        req.send(null);
+        req.send();
 
         req.onload = function () {
                 convertCSVtoArray(req.responseText);
@@ -174,7 +188,7 @@ function clearNum() {
 }
 
 function setNum(evt) {
-        var quizName = evt.id;
+        var quizName = evt.target.id;
         switch (quizName) {
                 case "usagi":
                         quiz = "Usagi.csv";
@@ -192,7 +206,12 @@ function setNum(evt) {
 function match() {
         var resultText = document.getElementById("resulttext");
         clearFlag = true;
-        console.log("start");
+
+        if (!(result.length > 1)) {
+                resultText.textContent = "問題をセットしてください";
+                return;
+        }
+
         matchX();
         if (clearFlag == false) {
                 resultText.textContent = "不正解";
@@ -215,26 +234,45 @@ function matchX() {
                         var targetColor = window.getComputedStyle(targetCell, '').backgroundColor;
 
                         if (j == 1 && Object.is(targetColor, "rgb(0, 0, 0)")) {
+
                                 ++num;
+
                                 if (num != Number(result[i][index])) {
                                         clearFlag = false;
                                         return;
                                 }
+
                         } else if (Object.is(targetColor, "rgb(0, 0, 0)")) {
+
                                 ++num;
+
                         } else if (Object.is(targetColor, "rgb(128, 128, 128)") ||
                                 Object.is(targetColor, "rgb(255, 255, 255)")) {
+
                                 if (num != 0 && Number(result[i][index]) != 0) {
-                                        console.log(Number(result[i][index]));
-                                        console.log(num);
 
                                         if (num != Number(result[i][index])) {
+
                                                 clearFlag = false;
                                                 return;
                                         }
+
+                                        if (index == result[i].length - 1) {
+
+                                                break;
+                                        }
                                         ++index;
+
                                 }
+
                                 num = 0;
+
+                                if (j == 1 && num == 0 && Number(result[i][index]) != 0) {
+
+                                        clearFlag = false;
+                                        return;
+                                }
+
                         }
                 }
         }
